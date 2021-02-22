@@ -4,7 +4,10 @@ package io.bankbridge.seedwork;
 public class Constants {
 
     /** Default page size:5 */
-    public static final int DEFAULT_PAGE_SIZE = 5;
+    public static final Integer DEFAULT_PAGE_SIZE = 5;
+
+    /** Retry bank provider to get bank data */
+    public static final Integer DEFAULT_RETRY_COUNT = 2;
 
     /** Empty string */
     public static final String STRING_EMPTY ="";
