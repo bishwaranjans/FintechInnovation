@@ -7,12 +7,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.asynchttpclient.*;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.logging.Logger;
 
+/**
+ * Class to provide remote calls based bank details. The remote calls detail
+ * will be retrieved from a config file. We are assuming that the remote API is
+ * up and running. If not, it will log the error.
+ */
 public class BanksRemoteCallsProvider implements IBanksProvider {
 
     private static final Logger logger = Logger.getLogger(BanksRemoteCallsProvider.class.getName());
@@ -20,6 +26,12 @@ public class BanksRemoteCallsProvider implements IBanksProvider {
     private final AsyncHttpClient client;
     private final ObjectMapper objectMapper;
 
+    /**
+     * Constructor to initialize the HTTP client,object mapper and reads out the
+     * remote calls confg details.
+     * 
+     * @throws IOException
+     */
     public BanksRemoteCallsProvider() throws IOException {
         DefaultAsyncHttpClientConfig.Builder clientBuilder = Dsl.config().setConnectTimeout(500);
         client = Dsl.asyncHttpClient(clientBuilder);
@@ -34,6 +46,7 @@ public class BanksRemoteCallsProvider implements IBanksProvider {
         }
     }
 
+    /** Method to get all the bank details from the remote calls. */
     @Override
     public List<BankModel> getBankDetails() {
         List<BankModel> banksList = new ArrayList<BankModel>();
@@ -43,6 +56,15 @@ public class BanksRemoteCallsProvider implements IBanksProvider {
         return banksList;
     }
 
+    /**
+     * Method to get the bank details by doing an HTTP clinet call. We are doing a
+     * sync call now as we are retrieving each bank details in a loop and needed to
+     * wait all to finish. Once ready, we can apply the pagination and filter only.
+     * 
+     * @param name
+     * @param url
+     * @param result
+     */
     public void getRemoteBankDetails(String name, String url, List<BankModel> result) {
         Request unboundRequest = Dsl.get(url).build();
         Future<Response> responseFuture = client.executeRequest(unboundRequest);

@@ -3,6 +3,7 @@ package io.bankbridge.model;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/** Model to return the v2(remote calls based) preferred properties. */
 @Getter
 @AllArgsConstructor
 public class BanksRemoteBasedModel {

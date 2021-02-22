@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/** Model is used for populating generic bank details. */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

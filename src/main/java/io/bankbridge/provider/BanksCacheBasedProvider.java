@@ -9,11 +9,18 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
+/** Class to provide Cache based bank details. */
 public class BanksCacheBasedProvider implements IBanksProvider {
 
     private static final Logger logger = Logger.getLogger(BanksCacheBasedProvider.class.getName());
     private final List<BankModel> cachedBanksList;
 
+    /**
+     * Constructor for initializing cache based bankd details. For any IO error, it
+     * will log the error and then will throw an exception.
+     * 
+     * @throws IOException
+     */
     public BanksCacheBasedProvider() throws IOException {
         try {
             BankModelList bankModelList = new ObjectMapper().readValue(
@@ -25,6 +32,7 @@ public class BanksCacheBasedProvider implements IBanksProvider {
         }
     }
 
+    /** Method to get the cached bank details. */
     @Override
     public List<BankModel> getBankDetails() {
         return cachedBanksList;

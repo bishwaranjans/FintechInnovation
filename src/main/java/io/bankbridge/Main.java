@@ -10,8 +10,19 @@ import io.bankbridge.provider.BanksCacheBasedProvider;
 import io.bankbridge.provider.BanksRemoteCallsProvider;
 import io.bankbridge.seedwork.CacheHelper;
 
+/**
+ * Main class from where our program runs. Make sure to start the
+ * MockRemotes.java program too as our BanksRemoteCallsProvider uses that Spark
+ * port. Otherwise, our remote calls will fail.
+ */
 public class Main {
 
+	/**
+	 * Program entry method
+	 * 
+	 * @param args
+	 * @throws Exception
+	 */
 	public static void main(String[] args) throws Exception {
 
 		port(8080);

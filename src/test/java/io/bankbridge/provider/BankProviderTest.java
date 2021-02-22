@@ -16,15 +16,25 @@ import static org.junit.Assert.*;
 
 import static spark.Spark.stop;
 
+/** Class to unit test providers. */
 public class BankProviderTest {
 
     private static final Logger logger = Logger.getLogger(BankProviderTest.class.getName());
 
+    /**
+     * Clean up will run after executing all tests. It will stop the Spark with port
+     * 1234.
+     */
     @AfterClass
     public static void cleanup() {
         stop(); // Stop the remote mock server
     }
 
+    /**
+     * Test method to test cache based provider.
+     * 
+     * @throws IOException
+     */
     @Test
     public void test_BanksCacheBasedProvider() throws IOException {
 
@@ -39,6 +49,11 @@ public class BankProviderTest {
         assertEquals("Banco de espiritu santo", banksList.stream().findFirst().get().getName());
     }
 
+    /**
+     * Test method to test the remote calls provider.
+     * 
+     * @throws IOException
+     */
     @Test
     public void test_BanksRemoteCallsProvider() throws IOException {
 
@@ -63,6 +78,12 @@ public class BankProviderTest {
                 .get().getCountryCode());
     }
 
+    /**
+     * Method to stopo the Spark port 1234 if it is already running. If already an
+     * instance is running, we are stopping this and again starting from the remote
+     * calls based test method. In this case, our test will never call with
+     * 'unreachable' error or 'already an instance running' error.
+     */
     private void StopSparkWithPort1234() {
         try {
             Runtime rt = Runtime.getRuntime();

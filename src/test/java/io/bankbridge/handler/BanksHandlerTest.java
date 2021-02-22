@@ -30,6 +30,10 @@ import io.bankbridge.seedwork.CacheHelper;
 import spark.Request;
 import spark.Response;
 
+/**
+ * Class to unit tests Bank handler. It will test both cache based and remote
+ * based.
+ */
 public class BanksHandlerTest {
 
     private static final Logger logger = Logger.getLogger(BanksHandlerTest.class.getName());
@@ -38,6 +42,10 @@ public class BanksHandlerTest {
     Request requestMock;
     Response responseMock;
 
+    /**
+     * Set up will run before executing any test. It initializes necessary http mock
+     * objects.
+     */
     @Before
     public void setup() {
         requestMock = mock(Request.class); // Spark request
@@ -45,11 +53,20 @@ public class BanksHandlerTest {
         httpServletRequest = mock(HttpServletRequest.class); // Javax servlet
     }
 
+    /**
+     * Clean up will run after executing all tests. It will stop the Spark with port
+     * 1234.
+     */
     @AfterClass
     public static void cleanup() {
         stop(); // Stop the remote mock server
     }
 
+    /**
+     * Test method to test cache based handler.
+     * 
+     * @throws IOException
+     */
     @Test
     public void test_BanksCacheBasedHandler() throws IOException {
 
@@ -77,6 +94,12 @@ public class BanksHandlerTest {
         assertThat(result, containsString("ULLAMCOSP16XXX"));
     }
 
+    /**
+     * Test method to test cache based handler. It will test the paginationa nd
+     * filter too.
+     * 
+     * @throws IOException
+     */
     @Test
     public void test_BanksCacheBasedHandler_Pagination_With_Filter() throws IOException {
 
@@ -104,6 +127,11 @@ public class BanksHandlerTest {
         assertThat(result, containsString("Soar Credit Union"));
     }
 
+    /**
+     * Test method to test the cache based handler with an invalid page.
+     * 
+     * @throws IOException
+     */
     @Test
     public void test_BanksCacheBasedHandler_Invalid_PageNumber() throws IOException {
 
@@ -129,8 +157,13 @@ public class BanksHandlerTest {
         // Assert
         assertNotNull(result);
         assertEquals("[]", result);
-    } 
+    }
 
+    /**
+     * Test method to test the remote calls with pagination and filter.
+     * 
+     * @throws IOException
+     */
     @Test
     public void test_BanksRemoteCallsBasedHandler_Pagination_With_Filter() throws IOException {
 
@@ -164,7 +197,13 @@ public class BanksHandlerTest {
         assertNotNull(result);
         assertThat(result, containsString("ETSWE19XXX"));
     }
-   
+
+    /**
+     * Method to stopo the Spark port 1234 if it is already running. If already an
+     * instance is running, we are stopping this and again starting from the remote
+     * calls based test method. In this case, our test will never call with
+     * 'unreachable' error or 'already an instance running' error.
+     */
     private void StopSparkWithPort1234() {
         try {
             Runtime rt = Runtime.getRuntime();
@@ -176,9 +215,9 @@ public class BanksHandlerTest {
                 int index = s.lastIndexOf(" ");
                 String sc = s.substring(index, s.length());
 
-                rt.exec("cmd /c Taskkill /PID" + sc + " /T /F");            
+                rt.exec("cmd /c Taskkill /PID" + sc + " /T /F");
             }
-            logger.info("Server Stopped");   
+            logger.info("Server Stopped");
             // JOptionPane.showMessageDialog(null, "Server Stopped");
         } catch (Exception e) {
             logger.info("Something Went wrong with server");

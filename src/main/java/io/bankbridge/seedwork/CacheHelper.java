@@ -12,12 +12,14 @@ import org.ehcache.expiry.Expirations;
 
 import io.bankbridge.model.BankModelList;
 
+/** Class to manager cache for the application. */
 public class CacheHelper {
 
     private CacheManager cacheManager;
 
     public final Cache<String, BankModelList> cacheDataList;
 
+    /** Constructor for initializing cache manager. */
     public CacheHelper() {
         System.getProperties().setProperty("java -Dnet.sf.ehcache.use.classic.lru", "true");
         cacheManager = CacheManagerBuilder.newCacheManagerBuilder().build();
@@ -28,6 +30,11 @@ public class CacheHelper {
                         .withExpiry(Expirations.timeToLiveExpiration(Duration.of(60, TimeUnit.SECONDS))));
     }
 
+    /**
+     * Method to put the banks list into the cache.
+     * 
+     * @param banks
+     */
     public void putInList(BankModelList banks) {
         cacheDataList.put(Constants.CACHE_BANKS, banks);
     }

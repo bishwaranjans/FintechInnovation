@@ -11,8 +11,18 @@ import io.bankbridge.seedwork.Constants;
 
 import spark.Request;
 
+/** Class to do manipulation on records with pagination and filter */
 public class BanksRequestFilter {
 
+        /**
+         * Method to retrieve the filters from the Spark request. The filter parameters
+         * are passed as query strings.
+         * 
+         * @param request
+         * @return The BankRequestFilterModel with pageNumber, pageSize, id, name,
+         *         countrycode, product and auth. For unpassed filter parameter, default
+         *         value or empty string is set to the model.
+         */
         public BankRequestFilterModel getRequestFilters(Request request) {
 
                 Integer pageNumber = !Strings.isNullOrEmpty(request.queryParams("pagenumber"))
@@ -42,24 +52,36 @@ public class BanksRequestFilter {
                 return new BankRequestFilterModel(pageNumber, pageSize, id, name, countryCode, product, auth);
         }
 
+        /**
+         * Method to retrieve the filtered banks with specified page size and page
+         * number
+         * 
+         * @param banksList
+         * @param requestParam
+         * @return List of filtered banks with specified number of records on specified
+         *         page. For any invalid filter parameter, no filters will be applied
+         *         and default record set will be returned.
+         */
         public List<BankModel> getFilterBankModels(List<BankModel> banksList, BankRequestFilterModel requestParam) {
 
-                // Filter with id
+                /** Filter with Id */
                 if (!Strings.isNullOrEmpty(requestParam.getId())) {
                         banksList = banksList.stream().filter(s -> s.getBic().equalsIgnoreCase(requestParam.getId()))
                                         .collect(Collectors.toList());
                 }
 
-                // Filter with country code
+                /** Filter with countrycode */
                 if (!Strings.isNullOrEmpty(requestParam.getCountryCode())) {
                         banksList = banksList.stream()
                                         .filter(s -> s.getCountryCode().equalsIgnoreCase(requestParam.getCountryCode()))
                                         .collect(Collectors.toList());
                 }
 
-                // Filter with product
-                // For v1- Products will be there, where as for v2-products will be null
-                // for any invalid filter value, default results will be returned without filter
+                /**
+                 * Filter with product. For v1- Products will be there, where as for v2-products
+                 * will be null for any invalid filter value, default results will be returned
+                 * without filter
+                 */
                 if (!Strings.isNullOrEmpty(requestParam.getProduct())
                                 && banksList.stream().anyMatch(p -> p.getProducts() != null)) {
                         banksList = banksList.stream()
@@ -68,20 +90,20 @@ public class BanksRequestFilter {
                                         .collect(Collectors.toList());
                 }
 
-                // Filter with name
+                /** Filter with name */
                 if (!Strings.isNullOrEmpty(requestParam.getName())) {
                         banksList = banksList.stream().filter(
                                         s -> s.getName().toLowerCase().contains(requestParam.getName().toLowerCase()))
                                         .collect(Collectors.toList());
                 }
 
-                // Filter with auth
+                /** Filter with auth */
                 if (!Strings.isNullOrEmpty(requestParam.getAuth())) {
                         banksList = banksList.stream().filter(s -> s.getAuth().equalsIgnoreCase(requestParam.getAuth()))
                                         .collect(Collectors.toList());
                 }
 
-                // Filter with page number and page size
+                /** Filter with page number and page size */ 
                 banksList = banksList.stream().skip(requestParam.getPageSize() * (requestParam.getPageNumber() - 1))
                                 .limit(requestParam.getPageSize()).collect(Collectors.toList());
 
