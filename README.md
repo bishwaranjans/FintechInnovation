@@ -55,6 +55,7 @@ You can find the mock implementation for the remote URLs in the MockRemotes clas
     - For any invalid filter parameter, the APIs will return default result and will ignore any invalid value specified.
 - Examples
     - http://localhost:8080/v1/banks/all?countrycode=de&product=accounts&name=soar
+    - http://localhost:8080/v1/banks/all?countrycode=de&product=accounts&pagesize=1&pagenumber=2
     - http://localhost:8080/v2/banks/all?pagesize=2&countrycode=se&pagenumber=2
 
 ## Scope Of Improvements/TODO:
