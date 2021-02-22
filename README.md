@@ -55,3 +55,5 @@ You can find the mock implementation for the remote URLs in the MockRemotes clas
     - For any invalid filter parameter, the APIs will return default result and will ignore any invalid value specified.
 ## Scope Of Improvements/TODO:
 - Retrieve remote calls with async
+## Dependency/Extensions Used
+- org.projectlombok has been used in the project. Make sure your IDE has the lombok extension installed. For VS code, extension - https://www.projectlombok.org/setup/vscode has been used.
