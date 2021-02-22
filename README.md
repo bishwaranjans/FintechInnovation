@@ -52,7 +52,7 @@ You can find the mock implementation for the remote URLs in the MockRemotes clas
     - Query string - **'pagenumber'** can be used to specify the desired page number to retrieve the records.
 - Filter
     - Filter Options are - **'id'**,**'countrycode'**,**'product'**,**'auth'**,**'name'**
-    - **'name'** filed looks for **contains** type check and other filters with exact value.
+    - **'name'** filter does filter with **contains** check and other filters with exact value.
     - For any invalid filter parameter, the APIs will return default result and will ignore any invalid value specified.
 - Examples
     - http://localhost:8080/v1/banks/all?countrycode=de&product=accounts&name=soar
