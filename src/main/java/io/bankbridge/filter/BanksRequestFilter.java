@@ -33,20 +33,21 @@ public class BanksRequestFilter {
                                 ? Integer.parseInt(request.queryParams("pagesize"))
                                 : Constants.DEFAULT_PAGE_SIZE;
 
-                String id = !Strings.isNullOrEmpty(request.queryParams("id")) ? request.queryParams("id")
+                String id = !Strings.isNullOrEmpty(request.queryParams("id")) ? request.queryParams("id").trim()
                                 : Constants.STRING_EMPTY;
 
-                String name = !Strings.isNullOrEmpty(request.queryParams("name")) ? request.queryParams("name")
+                String name = !Strings.isNullOrEmpty(request.queryParams("name")) ? request.queryParams("name").trim()
                                 : Constants.STRING_EMPTY;
 
                 String countryCode = !Strings.isNullOrEmpty(request.queryParams("countrycode"))
-                                ? request.queryParams("countrycode")
+                                ? request.queryParams("countrycode").trim()
                                 : Constants.STRING_EMPTY;
 
-                String auth = !Strings.isNullOrEmpty(request.queryParams("auth")) ? request.queryParams("auth")
+                String auth = !Strings.isNullOrEmpty(request.queryParams("auth")) ? request.queryParams("auth").trim()
                                 : Constants.STRING_EMPTY;
 
-                String product = !Strings.isNullOrEmpty(request.queryParams("product")) ? request.queryParams("product")
+                String product = !Strings.isNullOrEmpty(request.queryParams("product"))
+                                ? request.queryParams("product").trim()
                                 : Constants.STRING_EMPTY;
 
                 return new BankRequestFilterModel(pageNumber, pageSize, id, name, countryCode, product, auth);
@@ -83,11 +84,10 @@ public class BanksRequestFilter {
                  * without filter
                  */
                 if (!Strings.isNullOrEmpty(requestParam.getProduct())
-                                && banksList.stream().anyMatch(p -> p.getProducts() != null)) {
+                                && banksList.stream().anyMatch(p -> p.getProducts() != null)) {                                        
                         banksList = banksList.stream()
-                                        .filter(s -> s.getProducts().stream()
-                                                        .allMatch(p -> p.equalsIgnoreCase(requestParam.getProduct())))
-                                        .collect(Collectors.toList());
+                        .filter(f -> f.getProducts().stream().anyMatch(c -> c.equalsIgnoreCase(requestParam.getProduct())))
+                        .collect(Collectors.toList());                                      
                 }
 
                 /** Filter with name */
