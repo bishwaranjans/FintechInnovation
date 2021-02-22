@@ -78,7 +78,61 @@ public class BanksHandlerTest {
     }
 
     @Test
-    public void test_BanksRemoteCallsBasedHandler() throws IOException {
+    public void test_BanksCacheBasedHandler_Pagination_With_Filter() throws IOException {
+
+        // Set Up
+        IBanksProvider banksProvider = new BanksCacheBasedProvider();
+        CacheHelper cacheHelper = new CacheHelper();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String result;
+        when(requestMock.raw()).thenReturn(httpServletRequest);
+        when(requestMock.queryParams("pagesize")).thenReturn(String.valueOf("2"));
+        when(requestMock.queryParams("pagenumber")).thenReturn(String.valueOf("2"));
+        when(requestMock.queryParams("countrycode")).thenReturn(String.valueOf("de"));
+
+        BanksRequestHandler banksRequestHandler = new BanksRequestHandler(banksProvider, cacheHelper, objectMapper);
+
+        requestMock.queryParams().add("pagesize");
+        requestMock.queryParams().add("pagenumber");
+        requestMock.queryParams().add("countrycode");
+
+        // Act
+        result = banksRequestHandler.handle(requestMock, responseMock);
+
+        // Assert
+        assertNotNull(result);
+        assertThat(result, containsString("Soar Credit Union"));
+    }
+
+    @Test
+    public void test_BanksCacheBasedHandler_Invalid_PageNumber() throws IOException {
+
+        // Set Up
+        IBanksProvider banksProvider = new BanksCacheBasedProvider();
+        CacheHelper cacheHelper = new CacheHelper();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String result;
+        when(requestMock.raw()).thenReturn(httpServletRequest);
+        when(requestMock.queryParams("pagesize")).thenReturn(String.valueOf("21"));
+        when(requestMock.queryParams("pagenumber")).thenReturn(String.valueOf("2"));
+        when(requestMock.queryParams("countrycode")).thenReturn(String.valueOf("de"));
+
+        BanksRequestHandler banksRequestHandler = new BanksRequestHandler(banksProvider, cacheHelper, objectMapper);
+
+        requestMock.queryParams().add("pagesize");
+        requestMock.queryParams().add("pagenumber");
+        requestMock.queryParams().add("countrycode");
+
+        // Act
+        result = banksRequestHandler.handle(requestMock, responseMock);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals("[]", result);
+    } 
+
+    @Test
+    public void test_BanksRemoteCallsBasedHandler_Pagination_With_Filter() throws IOException {
 
         // Set Up
         // Invoke mock main method or use the JUNIT BeforeClass with empty args in
@@ -93,9 +147,9 @@ public class BanksHandlerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String result;
         when(requestMock.raw()).thenReturn(httpServletRequest);
-        when(requestMock.queryParams("pagesize")).thenReturn(String.valueOf("10"));
-        when(requestMock.queryParams("pagenumber")).thenReturn(String.valueOf("1"));
-        when(requestMock.queryParams("countrycode")).thenReturn(String.valueOf("de"));
+        when(requestMock.queryParams("pagesize")).thenReturn(String.valueOf("2"));
+        when(requestMock.queryParams("pagenumber")).thenReturn(String.valueOf("2"));
+        when(requestMock.queryParams("countrycode")).thenReturn(String.valueOf("se"));
 
         BanksRequestHandler banksRequestHandler = new BanksRequestHandler(banksProvider, cacheHelper, objectMapper);
 
@@ -108,9 +162,9 @@ public class BanksHandlerTest {
 
         // Assert
         assertNotNull(result);
-        assertThat(result, containsString("ANIMDEU7XXX"));
+        assertThat(result, containsString("ETSWE19XXX"));
     }
-
+   
     private void StopSparkWithPort1234() {
         try {
             Runtime rt = Runtime.getRuntime();
@@ -122,10 +176,9 @@ public class BanksHandlerTest {
                 int index = s.lastIndexOf(" ");
                 String sc = s.substring(index, s.length());
 
-                rt.exec("cmd /c Taskkill /PID" + sc + " /T /F");
-
+                rt.exec("cmd /c Taskkill /PID" + sc + " /T /F");            
             }
-            logger.info("Server Stopped");
+            logger.info("Server Stopped");   
             // JOptionPane.showMessageDialog(null, "Server Stopped");
         } catch (Exception e) {
             logger.info("Something Went wrong with server");
