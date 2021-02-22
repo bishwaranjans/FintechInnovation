@@ -3,18 +3,13 @@ package io.bankbridge.model;
 import java.util.ArrayList;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
-@Data
+@Getter
 @AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode
-public class BankModel {
-	private String bic;
+public class BanksCacheBasedModel {
+	private String id;
 	private String name;
 	private String countryCode;
-	private String auth;
 	private ArrayList<String> products;
 }

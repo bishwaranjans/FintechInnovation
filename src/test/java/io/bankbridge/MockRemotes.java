@@ -1,10 +1,11 @@
 package io.bankbridge;
+
 import static spark.Spark.get;
 import static spark.Spark.port;
 
 public class MockRemotes {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		
 		port(1234);
 

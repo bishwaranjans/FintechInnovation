@@ -1,6 +1,6 @@
 # Fintech Innovation Coding Test
 
-## Introduction:
+## Intro:
 We have an API towards application developers, which returns information about all the banks which are available for the application.
 
 The response from the API looks like this:
@@ -17,7 +17,7 @@ The response from the API looks like this:
     ]   
   },
   {
-    
+    ...
   }
 ]
 ```
@@ -40,18 +40,12 @@ You can find the mock implementation for the remote URLs in the MockRemotes clas
 
 4. Add pagination and filtering to v1 and v2 of the banks APIs.
 - Non-Functional requirements
-  - The client should be able to define the page size, default being 5.   
-  - A filter for countrycode, product and other values should be added.  
+  - The client should be able to define the page size, default being 5.
+  - A filter for countrycode, product and other values should be added.
 
 5. Refactor the existing code base.
     - Feel free to add comments to the code to clarify the changes you are making.
-## Assumptions
-- Query strings can be used for defining the page size, page number and filter. Please note that query string parameters are case sensitive. Make sure to pass parameter as mentioned below.
-- Paging   
-    - Query string - **'pagesize'** can used to specify the record number per page. 
-    - Query string - **'pagenumber'** can be used to specify the desired page number to retrieve the records.
-- Filter
-    - Filter Options are - **'id'**,**'countrycode'**,**'product'**,**'auth'**,**'name'**
-    - For any invalid filter parameter, the APIs will return default result and will ignore any invalid value specified.
-## Scope Of Improvements/TODO:
-- Retrieve remote calls with async
+## Sending in the assignment
+- You may send in the assignment on a git repository or as a zip.
+
+
