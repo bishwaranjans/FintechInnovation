@@ -71,6 +71,7 @@ public class BanksRequestHandler {
                 bankModelList = this.cacheHelper.cacheDataList.get(Constants.CACHE_BANKS);
             } else {
                 for (int i = 0; i < Constants.DEFAULT_RETRY_COUNT; i++) {
+                    bankModelList.setBanks(null); /** Reset the value */
                     bankModelList.setBanks(this.banksProvider.getBankDetails());
                     if (!bankModelList.getBanks().isEmpty()) {
                         this.cacheHelper.putInList(bankModelList);

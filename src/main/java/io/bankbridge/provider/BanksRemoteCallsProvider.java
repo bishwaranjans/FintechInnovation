@@ -1,6 +1,7 @@
 package io.bankbridge.provider;
 
 import io.bankbridge.model.BankModel;
+import io.bankbridge.seedwork.Constants;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -11,7 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 
 /**
@@ -58,24 +59,41 @@ public class BanksRemoteCallsProvider implements IBanksProvider {
 
     /**
      * Method to get the bank details by doing an HTTP clinet call. We are doing a
-     * sync call now as we are retrieving each bank details in a loop and needed to
-     * wait all to finish. Once ready, we can apply the pagination and filter only.
+     * async call now, but waiting for it to finish. Once ready, we can apply the pagination and filter only.
      * 
      * @param name
      * @param url
      * @param result
      */
     public void getRemoteBankDetails(String name, String url, List<BankModel> result) {
-        Request unboundRequest = Dsl.get(url).build();
-        Future<Response> responseFuture = client.executeRequest(unboundRequest);
 
-        try {
-            Response response = responseFuture.get();
-            String responseText = response.getResponseBody();
-            BankModel bank = objectMapper.readValue(responseText, BankModel.class);
-            result.add(bank);
-        } catch (Exception e) {
-            logger.info("Error occurred while retrieving details for Bank: " + name);
+        CompletableFuture<Response> whenResponse = client.prepareGet(url).execute().toCompletableFuture();
+
+        for (int i = 0; i < Constants.DEFAULT_RETRY_COUNT; i++) {
+            whenResponse = whenResponse.thenApply(response -> {
+                String responseText = response.getResponseBody();
+                try {
+                    BankModel bank = objectMapper.readValue(responseText, BankModel.class);
+                    /** Check for unique id of bank. Add to list if it is unique */
+                    if (!result.stream().anyMatch(r -> r.getBic().equalsIgnoreCase(bank.getBic()))) {
+                        result.add(bank);
+                    } else {
+                        logger.info("Duplicate banks found with id: " + bank.getBic()
+                                + ". Please map unique name with unique API end point.");
+                    }
+
+                } catch (Exception ex) {
+                    logger.info("Error occurred while parsing. Error details: " + ex.getMessage() + ". Response Text: "
+                            + responseText);
+                }
+                return response;
+            }).exceptionally(p -> {
+                logger.info("Error occurred while retrieving details for Bank: " + name + ". Error details: "
+                        + p.getMessage());
+                return null;
+            });
+
         }
+        whenResponse.join(); // wait for completion
     }
 }
