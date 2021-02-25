@@ -61,8 +61,7 @@ You can find the mock implementation for the remote URLs in the MockRemotes clas
     - http://localhost:8080/v2/banks/all?auth=ssl-certificate&name=r&countrycode=no&pagesize=1&pagenumber=3
 
 ## Scope Of Improvements/TODO:
-- Retrieve remote calls with async
-- Retry count/option in remote calls
+- Parallel execution of remote API end points
 ## Dependency/Extensions Used
 - **org.projectlombok** has been used in the project. Make sure your IDE has the lombok extension installed. For VS code, extension - https://www.projectlombok.org/setup/vscode has been used.
 - **async-http-client** - https://www.baeldung.com/async-http-client
