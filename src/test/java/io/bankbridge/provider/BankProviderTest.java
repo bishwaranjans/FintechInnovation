@@ -71,7 +71,7 @@ public class BankProviderTest {
         List<BankModel> banksList = bankProvider.getBankDetails();
 
         // Assert
-        assertEquals(20, banksList.size());
+        assertEquals(19, banksList.size());
         assertEquals("PARIATURDEU0XXX", banksList.stream().filter(b -> b.getName().equals("Banco de espiritu santo"))
                 .findFirst().get().getBic());
         assertEquals("GB", banksList.stream().filter(b -> b.getName().equals("Banco de espiritu santo")).findFirst()
