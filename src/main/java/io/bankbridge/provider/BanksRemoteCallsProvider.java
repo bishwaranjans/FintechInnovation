@@ -34,7 +34,8 @@ public class BanksRemoteCallsProvider implements IBanksProvider {
      * @throws IOException
      */
     public BanksRemoteCallsProvider() throws IOException {
-        DefaultAsyncHttpClientConfig.Builder clientBuilder = Dsl.config().setConnectTimeout(500);
+        DefaultAsyncHttpClientConfig.Builder clientBuilder = Dsl.config().setConnectTimeout(500)
+                .setMaxRequestRetry(Constants.DEFAULT_RETRY_COUNT);
         client = Dsl.asyncHttpClient(clientBuilder);
         objectMapper = new ObjectMapper();
 
@@ -59,7 +60,8 @@ public class BanksRemoteCallsProvider implements IBanksProvider {
 
     /**
      * Method to get the bank details by doing an HTTP clinet call. We are doing a
-     * async call now, but waiting for it to finish. Once ready, we can apply the pagination and filter only.
+     * async call now, but waiting for it to finish. Once ready, we can apply the
+     * pagination and filter only.
      * 
      * @param name
      * @param url
@@ -69,31 +71,29 @@ public class BanksRemoteCallsProvider implements IBanksProvider {
 
         CompletableFuture<Response> whenResponse = client.prepareGet(url).execute().toCompletableFuture();
 
-        for (int i = 0; i < Constants.DEFAULT_RETRY_COUNT; i++) {
-            whenResponse = whenResponse.thenApply(response -> {
-                String responseText = response.getResponseBody();
-                try {
-                    BankModel bank = objectMapper.readValue(responseText, BankModel.class);
-                    /** Check for unique id of bank. Add to list if it is unique */
-                    if (!result.stream().anyMatch(r -> r.getBic().equalsIgnoreCase(bank.getBic()))) {
-                        result.add(bank);
-                    } else {
-                        logger.info("Duplicate banks found with id: " + bank.getBic()
-                                + ". Please map unique name with unique API end point.");
-                    }
-
-                } catch (Exception ex) {
-                    logger.info("Error occurred while parsing. Error details: " + ex.getMessage() + ". Response Text: "
-                            + responseText);
+        whenResponse = whenResponse.thenApply(response -> {
+            String responseText = response.getResponseBody();
+            try {
+                BankModel bank = objectMapper.readValue(responseText, BankModel.class);
+                /** Check for unique id of bank. Add to list if it is unique */
+                if (!result.stream().anyMatch(r -> r.getBic().equalsIgnoreCase(bank.getBic()))) {
+                    result.add(bank);
+                } else {
+                    logger.info("Duplicate banks found with id: " + bank.getBic()
+                            + ". Please map unique name with unique API end point.");
                 }
-                return response;
-            }).exceptionally(p -> {
-                logger.info("Error occurred while retrieving details for Bank: " + name + ". Error details: "
-                        + p.getMessage());
-                return null;
-            });
 
-        }
+            } catch (Exception ex) {
+                logger.info("Error occurred while parsing. Error details: " + ex.getMessage() + ". Response Text: "
+                        + responseText);
+            }
+            return response;
+        }).exceptionally(p -> {
+            logger.info(
+                    "Error occurred while retrieving details for Bank: " + name + ". Error details: " + p.getMessage());
+            return null;
+        });
+
         whenResponse.join(); // wait for completion
     }
 }
