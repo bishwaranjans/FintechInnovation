@@ -71,14 +71,13 @@ public class BanksRequestHandler {
                 bankModelList = this.cacheHelper.cacheDataList.get(Constants.CACHE_BANKS);
             } else {
                 for (int i = 0; i < Constants.DEFAULT_RETRY_COUNT; i++) {
-                    bankModelList.setBanks(null); /** Reset the value */
                     bankModelList.setBanks(this.banksProvider.getBankDetails());
                     if (!bankModelList.getBanks().isEmpty()) {
                         this.cacheHelper.putInList(bankModelList);
                         break;
                     }
                 }
-                
+
                 if (bankModelList.getBanks().isEmpty()) { /** Returns as there is no data to show and filter. */
                     return "No banks data available! Make sure to restart the ports 8080 & 1234 and retry again.";
                 }
