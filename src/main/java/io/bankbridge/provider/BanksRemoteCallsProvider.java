@@ -29,7 +29,7 @@ public class BanksRemoteCallsProvider implements IBanksProvider {
 
     /**
      * Constructor to initialize the HTTP client,object mapper and reads out the
-     * remote calls confg details.
+     * remote calls config details. For the HTTP client config, a timeout and configurable retry option has been set.
      * 
      * @throws IOException
      */
