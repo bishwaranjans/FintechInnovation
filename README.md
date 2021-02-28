@@ -58,7 +58,7 @@ You can find the mock implementation for the remote URLs in the MockRemotes clas
     - http://localhost:8080/v1/banks/all?countrycode=de&product=accounts&name=soar
     - http://localhost:8080/v1/banks/all?countrycode=de&product=accounts&pagesize=1&pagenumber=2
     - http://localhost:8080/v2/banks/all?pagesize=2&countrycode=se&pagenumber=2
-    - http://localhost:8080/v2/banks/all?auth=ssl-certificate&name=r&countrycode=no&pagesize=1&pagenumber=3
+    - http://localhost:8080/v2/banks/all?auth=ssl-certificate&name=r&countrycode=no&pagesize=1&pagenumber=2
 
 ## Scope Of Improvements/TODO:
 - Parallel execution of remote API end points
