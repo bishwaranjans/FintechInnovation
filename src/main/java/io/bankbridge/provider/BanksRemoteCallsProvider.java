@@ -67,7 +67,7 @@ public class BanksRemoteCallsProvider implements IBanksProvider {
      * @param url
      * @param result
      */
-    public void getRemoteBankDetails(String name, String url, List<BankModel> result) {
+    private void getRemoteBankDetails(String name, String url, List<BankModel> result) {
 
         CompletableFuture<Response> whenResponse = client.prepareGet(url).execute().toCompletableFuture();
 
