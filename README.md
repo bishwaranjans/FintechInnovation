@@ -62,7 +62,7 @@ You can find the mock implementation for the remote URLs in the MockRemotes clas
 
 ## Scope Of Improvements/TODO:
 - Parallel execution of remote API end points
-- Read the default values/constants from a config file e.g. banks.json
+- Read the default values/constants from a config file e.g. banks.json from resources folder
 ## Dependency/Extensions Used
 - **org.projectlombok** has been used in the project. Make sure your IDE has the lombok extension installed. For VS code, extension - https://www.projectlombok.org/setup/vscode has been used.
 - **async-http-client** - https://www.baeldung.com/async-http-client
