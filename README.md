@@ -1,4 +1,4 @@
-# Fintech Innovation Coding Test
+# Fintech Innovation
 
 ## Introduction:
 We have an API towards application developers, which returns information about all the banks which are available for the application.
